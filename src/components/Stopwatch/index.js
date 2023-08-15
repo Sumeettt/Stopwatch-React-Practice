@@ -8,7 +8,11 @@ const initialState = {
 
 class Stopwatch extends Component {
   state = initialState
-
+  
+  componentWillUnmount() {
+    this.clearTimerInterval()
+  }
+  
   clearTimerInterval = () => {
     clearInterval(this.intervalId)
   }
@@ -21,10 +25,12 @@ class Stopwatch extends Component {
 
   onStaringTimer = () => {
     this.intervalId = setInterval(this.incrementTimeElapsedInSeconds, 1000)
+    this.setState({isTimerRunning: true})
   }
 
   onStoppingTimer = () => {
     this.clearTimerInterval()
+    this.setState({isTimerRunning: false})
   }
 
   onResettingTimer = () => {
@@ -45,8 +51,7 @@ class Stopwatch extends Component {
   }
 
   render() {
-    const {timeElapsedInSeconds} = this.state
-    console.log(timeElapsedInSeconds)
+    const {isTimerRunning} = this.state
 
     return (
       <div className="bg-container">
@@ -67,6 +72,7 @@ class Stopwatch extends Component {
                 className="start-button control-buttons"
                 type="button"
                 onClick={this.onStaringTimer}
+                disabled={isTimerRunning}
               >
                 Start
               </button>
